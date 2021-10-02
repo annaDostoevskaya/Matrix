@@ -24,6 +24,7 @@ public:
     int getElement(int r, int c);
     void setElement(int r, int c, int arg);
     void loadMatrix(FILE* fp);
+    void saveMatrix(FILE* fp);
     void displayMatrix();
 };
 
@@ -98,6 +99,16 @@ int Matrix::loadMatrixElement(FILE* fp)
     return atoi(buffer);
 }
 
+void Matrix::saveMatrix(FILE* fp)
+{
+    for (int i = 0; i < Rows; i++)
+    {
+        for (int j = 0; j < Colums; j++)
+            fprintf(fp, "%d ", Item[i][j]);
+        putc('\n', fp);
+    }
+}
+
 void Matrix::itemMemAllocate()
 {
     Item = new int* [Rows];
@@ -128,16 +139,14 @@ void Matrix::displayMatrix()
 
 int main()
 {
-
     Matrix m;
     FILE* fp = fopen("TEST.mtrx", "r");
+    FILE* fp_w = fopen("TEST_W.mtrx", "w");
     m.loadMatrix(fp);
-    m.displayMatrix();
-    /*
-    FILE* f = fopen("test.txt", "w");
-    char c = 'h';
-    fputc(c, f);
-    */
-
+    m.setElement(0, 0, 0);
+    m.setElement(0, 1, 5);
+    m.saveMatrix(fp_w);
+    fclose(fp);
+    fclose(fp_w);
     return 0;
 }
