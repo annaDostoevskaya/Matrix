@@ -131,5 +131,9 @@ void Matrix::displayMatrix()
 int main()
 {
 
+    Matrix *m = new Matrix(5, 5);
+
+    delete m;
+
     return 0;
 }
