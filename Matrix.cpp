@@ -20,23 +20,20 @@ private:
         for (int i = 0; i < Rows; i++)
             Item[i] = new int[Colums];
     };
+    void setRows(int r) { Rows = r; };
+    void setColums(int c) { Colums = c; };
 public:
     Matrix() : Rows(0), Colums(0), Item(NULL) {};
     Matrix(int r, int c);
     ~Matrix();
-    int getElement(int r, int c);
+    int getElement(int r, int c) const;
     void setElement(int r, int c, int arg);
-    /* 
-    When we extented Matrix to delate Rows or Colums,
-    we can use it.
-    */
-    void setRows(int r) { Rows = r; };
-    void setColums(int c) { Colums = c; };
-    int getRows() { return Rows; };
-    int getColums() { return Colums; };
+    int getRows() const { return Rows; };
+    int getColums() const { return Colums; };
+    void saveMatrix(FILE* fp) const;
+    void displayMatrix() const;
     void loadMatrix(FILE* fp);
-    void saveMatrix(FILE* fp);
-    void displayMatrix();
+    void deleteRow(int index);
 };
 
 Matrix::Matrix(int r, int c) : Rows(r), Colums(c)
@@ -51,7 +48,7 @@ Matrix::~Matrix()
     delete[] Item;
 }
 
-int Matrix::getElement(int r, int c)
+int Matrix::getElement(int r, int c) const
 {
     /* 
     well, in reality we can build class Item, and then 
@@ -113,7 +110,8 @@ int Matrix::loadMatrixElement(FILE* fp)
     return atoi(buffer);
 }
 
-void Matrix::saveMatrix(FILE* fp)
+
+void Matrix::saveMatrix(FILE* fp) const
 {
     for (int i = 0; i < Rows; i++)
     {
@@ -123,13 +121,87 @@ void Matrix::saveMatrix(FILE* fp)
     }
 }
 
-void Matrix::displayMatrix()
+void Matrix::deleteRow(int index)
+{
+    delete[] Item[index];
+    for (int i = index; i < (Rows - 1); i++)
+        Item[i] = Item[i + 1];
+    setRows(Rows - 1);
+}
+
+void Matrix::displayMatrix() const
 {
     saveMatrix(stdout);
+    putc('\n', stdout);
+}
+
+int getIndexRowMinimumValueFromRange(const Matrix& m, int r1, int r2, int c1, int c2)
+{
+    int imin = r1;
+    int min = m.getElement(r1, c1);
+    for (int i = r1; i < r2; i++)
+    {
+        for (int j = c1; j < c2; j++)
+        {
+            if (min > m.getElement(i, j))
+            {
+                min = m.getElement(i, j);
+                imin = i;
+            }
+        }
+    }
+    return imin;
+}
+
+void getArrayFromMatrixRange(Matrix const& m, int *array, 
+                             int r1, int r2, int c1, int c2)
+{
+    int idx_a = 0;
+    for (int i = r1; i < r2; i++)
+    {
+        for (int j = c1; j < c2; j++)
+        {
+            array[idx_a] = m.getElement(i, j);
+            idx_a++;
+        }
+        printf("\n");
+    }
+}
+
+int cmpfunc(const int* a, const int* b)
+{
+    return *a - *b;
 }
 
 int main()
 {
-
+    /*
+    // Task 2:
+    Matrix* m = new Matrix;
+    FILE* fp = fopen("TEST.mtrx", "r");
+    m->loadMatrix(fp);
+    m->displayMatrix();
+    int i = getIndexRowMinimumValueFromRange(*m, 1, 4, 1, 4);
+    m->deleteRow(i);
+    m->displayMatrix();
+    fclose(fp);
+    delete m;
+    */
+  
+    /*
+    // Task 3:
+    Matrix* m = new Matrix();
+    FILE* fp = fopen("TEST.mtrx", "r");
+    m->loadMatrix(fp);
+    m->displayMatrix();
+    int size = (3 - 1) * (4 - 1);
+    int* a = new int[size];
+    printf("%d\n", size);
+    getArrayFromMatrixRange(*m, a, 1, 3, 1, 4);
+    qsort(a, size, sizeof(int), (int(*) (const void*, const void*)) cmpfunc);
+    for (int i = 0; i < size; i++)
+        printf("%d ", a[i]);
+    printf("\n");
+    */
     return 0;
 }
