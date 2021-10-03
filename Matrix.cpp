@@ -134,17 +134,38 @@ void Matrix::displayMatrix() const
     putc('\n', stdout);
 }
 
-
+int getIndexRowMinimumValueFromRange(const Matrix& m, int r1, int r2, int c1, int c2)
+{
+    int imin = r1;
+    int min = m.getElement(r1, c1);
+    for (int i = r1; i < r2; i++)
+    {
+        for (int j = c1; j < c2; j++)
+        {
+            if (min > m.getElement(i, j))
+            {
+                min = m.getElement(i, j);
+                imin = i;
+            }
+        }
+    }
+    return imin;
+}
 
 int main()
 {
+    /*
+    // Task 2:
     Matrix* m = new Matrix;
     FILE* fp = fopen("TEST.mtrx", "r");
     m->loadMatrix(fp);
     m->displayMatrix();
-    m->deleteRow(0);
+    int i = getIndexRowMinimumValueFromRange(*m, 1, 4, 1, 4);
+    m->deleteRow(i);
     m->displayMatrix();
     fclose(fp);
     delete m;
+    */
+
     return 0;
 }
