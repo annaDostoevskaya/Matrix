@@ -24,7 +24,7 @@ public:
     Matrix() : Rows(0), Colums(0), Item(NULL) {};
     Matrix(int r, int c);
     ~Matrix();
-    int getElement(int r, int c);
+    int getElement(int r, int c) const;
     void setElement(int r, int c, int arg);
     /* 
     When we extented Matrix to delate Rows or Colums,
@@ -32,7 +32,7 @@ public:
     */
     void setRows(int r) { Rows = r; };
     void setColums(int c) { Colums = c; };
-    int getRows() { return Rows; };
+    int getRows() const { return Rows; };
     int getColums() { return Colums; };
     void loadMatrix(FILE* fp);
     void saveMatrix(FILE* fp);
@@ -51,7 +51,7 @@ Matrix::~Matrix()
     delete[] Item;
 }
 
-int Matrix::getElement(int r, int c)
+int Matrix::getElement(int r, int c) const
 {
     /* 
     well, in reality we can build class Item, and then 
@@ -113,6 +113,8 @@ int Matrix::loadMatrixElement(FILE* fp)
     return atoi(buffer);
 }
 
+
+
 void Matrix::saveMatrix(FILE* fp)
 {
     for (int i = 0; i < Rows; i++)
@@ -128,8 +130,42 @@ void Matrix::displayMatrix()
     saveMatrix(stdout);
 }
 
+void getArrayFromMatrixRange(Matrix const& m, int *array, 
+                             int r1, int r2, int c1, int c2)
+{
+    int idx_a = 0;
+    for (int i = r1; i < r2; i++)
+    {
+        for (int j = c1; j < c2; j++)
+        {
+            array[idx_a] = m.getElement(i, j);
+            idx_a++;
+        }
+        printf("\n");
+    }
+}
+
+int cmpfunc(const int* a, const int* b)
+{
+    return *a - *b;
+}
+
 int main()
 {
-
+    /*
+    // Task 3:
+    Matrix* m = new Matrix();
+    FILE* fp = fopen("TEST.mtrx", "r");
+    m->loadMatrix(fp);
+    m->displayMatrix();
+    int size = (3 - 1) * (4 - 1);
+    int* a = new int[size];
+    printf("%d\n", size);
+    getArrayFromMatrixRange(*m, a, 1, 3, 1, 4);
+    qsort(a, size, sizeof(int), (int(*) (const void*, const void*)) cmpfunc);
+    for (int i = 0; i < size; i++)
+        printf("%d ", a[i]);
+    printf("\n");
+    */
     return 0;
 }
