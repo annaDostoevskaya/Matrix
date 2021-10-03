@@ -20,23 +20,20 @@ private:
         for (int i = 0; i < Rows; i++)
             Item[i] = new int[Colums];
     };
+    void setRows(int r) { Rows = r; };
+    void setColums(int c) { Colums = c; };
 public:
     Matrix() : Rows(0), Colums(0), Item(NULL) {};
     Matrix(int r, int c);
     ~Matrix();
     int getElement(int r, int c) const;
     void setElement(int r, int c, int arg);
-    /* 
-    When we extented Matrix to delate Rows or Colums,
-    we can use it.
-    */
-    void setRows(int r) { Rows = r; };
-    void setColums(int c) { Colums = c; };
     int getRows() const { return Rows; };
-    int getColums() { return Colums; };
+    int getColums() const { return Colums; };
+    void saveMatrix(FILE* fp) const;
+    void displayMatrix() const;
     void loadMatrix(FILE* fp);
-    void saveMatrix(FILE* fp);
-    void displayMatrix();
+    void deleteRow(int index);
 };
 
 Matrix::Matrix(int r, int c) : Rows(r), Colums(c)
@@ -114,8 +111,7 @@ int Matrix::loadMatrixElement(FILE* fp)
 }
 
 
-
-void Matrix::saveMatrix(FILE* fp)
+void Matrix::saveMatrix(FILE* fp) const
 {
     for (int i = 0; i < Rows; i++)
     {
@@ -125,9 +121,36 @@ void Matrix::saveMatrix(FILE* fp)
     }
 }
 
-void Matrix::displayMatrix()
+void Matrix::deleteRow(int index)
+{
+    delete[] Item[index];
+    for (int i = index; i < (Rows - 1); i++)
+        Item[i] = Item[i + 1];
+    setRows(Rows - 1);
+}
+
+void Matrix::displayMatrix() const
 {
     saveMatrix(stdout);
+    putc('\n', stdout);
+}
+
+int getIndexRowMinimumValueFromRange(const Matrix& m, int r1, int r2, int c1, int c2)
+{
+    int imin = r1;
+    int min = m.getElement(r1, c1);
+    for (int i = r1; i < r2; i++)
+    {
+        for (int j = c1; j < c2; j++)
+        {
+            if (min > m.getElement(i, j))
+            {
+                min = m.getElement(i, j);
+                imin = i;
+            }
+        }
+    }
+    return imin;
 }
 
 void getArrayFromMatrixRange(Matrix const& m, int *array, 
@@ -152,6 +175,19 @@ int cmpfunc(const int* a, const int* b)
 
 int main()
 {
+    /*
+    // Task 2:
+    Matrix* m = new Matrix;
+    FILE* fp = fopen("TEST.mtrx", "r");
+    m->loadMatrix(fp);
+    m->displayMatrix();
+    int i = getIndexRowMinimumValueFromRange(*m, 1, 4, 1, 4);
+    m->deleteRow(i);
+    m->displayMatrix();
+    fclose(fp);
+    delete m;
+    */
+  
     /*
     // Task 3:
     Matrix* m = new Matrix();
