@@ -113,6 +113,8 @@ int Matrix::loadMatrixElement(FILE* fp)
     return atoi(buffer);
 }
 
+
+
 void Matrix::saveMatrix(FILE* fp)
 {
     for (int i = 0; i < Rows; i++)
@@ -143,8 +145,15 @@ void getArrayFromMatrixRange(Matrix const& m, int *array,
     }
 }
 
+int cmpfunc(const int* a, const int* b)
+{
+    return *a - *b;
+}
+
 int main()
 {
+    /*
+    // Task 3:
     Matrix* m = new Matrix();
     FILE* fp = fopen("TEST.mtrx", "r");
     m->loadMatrix(fp);
@@ -153,8 +162,10 @@ int main()
     int* a = new int[size];
     printf("%d\n", size);
     getArrayFromMatrixRange(*m, a, 1, 3, 1, 4);
+    qsort(a, size, sizeof(int), (int(*) (const void*, const void*)) cmpfunc);
     for (int i = 0; i < size; i++)
         printf("%d ", a[i]);
     printf("\n");
+    */
     return 0;
 }
