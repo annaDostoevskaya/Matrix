@@ -34,6 +34,7 @@ public:
     void displayMatrix() const;
     void loadMatrix(FILE* fp);
     void deleteRow(int index);
+    //TODO: operator[]() {}
 };
 
 Matrix::Matrix(int r, int c) : Rows(r), Colums(c)
@@ -135,7 +136,7 @@ void Matrix::displayMatrix() const
     putc('\n', stdout);
 }
 
-int getIndexRowMinimumValueFromRange(const Matrix& m, int r1, int r2, int c1, int c2)
+int getIndexRowMinimumValueFromRange(const Matrix &m, int r1, int r2, int c1, int c2)
 {
     int imin = r1;
     int min = m.getElement(r1, c1);
@@ -153,7 +154,7 @@ int getIndexRowMinimumValueFromRange(const Matrix& m, int r1, int r2, int c1, in
     return imin;
 }
 
-void getArrayFromMatrixRange(Matrix const& m, int *array, 
+void getArrayFromMatrixRange(const Matrix& m, int *array,
                              int r1, int r2, int c1, int c2)
 {
     int idx_a = 0;
