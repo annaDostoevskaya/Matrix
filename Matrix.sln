@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.31605.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Matrix", "Matrix.vcxproj", "{C8B4DDC1-C10E-49AE-8B3C-17B6EFD692A9}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Matrix-Tests", "Matrix-Tests\Matrix-Tests.vcxproj", "{16D40AA6-49E8-4C68-9402-0C25260E30DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{C8B4DDC1-C10E-49AE-8B3C-17B6EFD692A9}.Release|x64.Build.0 = Release|x64
 		{C8B4DDC1-C10E-49AE-8B3C-17B6EFD692A9}.Release|x86.ActiveCfg = Release|Win32
 		{C8B4DDC1-C10E-49AE-8B3C-17B6EFD692A9}.Release|x86.Build.0 = Release|Win32
+		{16D40AA6-49E8-4C68-9402-0C25260E30DD}.Debug|x64.ActiveCfg = Debug|x64
+		{16D40AA6-49E8-4C68-9402-0C25260E30DD}.Debug|x64.Build.0 = Debug|x64
+		{16D40AA6-49E8-4C68-9402-0C25260E30DD}.Debug|x86.ActiveCfg = Debug|Win32
+		{16D40AA6-49E8-4C68-9402-0C25260E30DD}.Debug|x86.Build.0 = Debug|Win32
+		{16D40AA6-49E8-4C68-9402-0C25260E30DD}.Release|x64.ActiveCfg = Release|x64
+		{16D40AA6-49E8-4C68-9402-0C25260E30DD}.Release|x64.Build.0 = Release|x64
+		{16D40AA6-49E8-4C68-9402-0C25260E30DD}.Release|x86.ActiveCfg = Release|Win32
+		{16D40AA6-49E8-4C68-9402-0C25260E30DD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
