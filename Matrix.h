@@ -32,9 +32,9 @@ public:
     void setElement(int r, int c, int arg);
     int getRows() const { return Rows; };
     int getColums() const { return Colums; };
-    void saveMatrix(FILE* fp) const;
+    int saveMatrix(FILE* fp) const;
     void displayMatrix() const;
-    void loadMatrix(FILE* fp);
+    int loadMatrix(FILE* fp);
     void deleteRow(int index);
     //TODO(annad): operator[]() {}
 };

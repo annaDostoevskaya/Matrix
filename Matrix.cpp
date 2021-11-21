@@ -1,4 +1,5 @@
 #include "Matrix.h"
+#include <errno.h>
 
 
 Matrix::Matrix(int r, int c) : Rows(r), Colums(c)
@@ -29,13 +30,20 @@ void Matrix::setElement(int r, int c, int arg)
     Item[r][c] = arg;
 }
 
-void Matrix::loadMatrix(FILE* fp)
+int Matrix::loadMatrix(FILE* fp)
 {
+    if (!fp)
+    {
+        errno = ENOENT;
+        return -1;
+    }
     loadMatrixSize(fp);
     itemMemAllocate();
     for (int i = 0; i < Rows; i++)
         for (int j = 0; j < Colums; j++)
             Item[i][j] = loadMatrixElement(fp);
+    
+    return 0;
 }
 
 void Matrix::loadMatrixSize(FILE* fp)
@@ -76,8 +84,14 @@ int Matrix::loadMatrixElement(FILE* fp)
 }
 
 
-void Matrix::saveMatrix(FILE* fp) const
+int Matrix::saveMatrix(FILE* fp) const
 {
+    if (!fp)
+    {
+        errno = ENOENT;
+        return -1;
+    }
+
     for (int i = 0; i < Rows; i++)
     {
         for (int j = 0; j < Colums; j++)
