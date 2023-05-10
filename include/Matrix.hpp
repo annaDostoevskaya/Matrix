@@ -23,7 +23,7 @@ public:
     class Iter;
 
     Matrix() : items(nullptr), w(0), h(0) {}
-    Matrix(int _w, int _h) : w(_w), h(_h), items(new T[w*h]) {}
+    Matrix(int _w, int _h) : w(_w), h(_h), items(new T[_w*_h]) {}
     ~Matrix() { delete[] items; }
     T& get(int i) const { return items[i]; }
     inline int getSize() const { return w*h; }
@@ -105,7 +105,8 @@ Matrix<T>& Matrix<T>::operator=(const Matrix<T>& other)
     
     w = other.w;
     h = other.h;
-    items = new T[w*h];
+
+    items = new T[w*other.h];
     Iter src(other); 
     Iter dst(*this);
     while (src.more() && dst.more())
@@ -115,7 +116,7 @@ Matrix<T>& Matrix<T>::operator=(const Matrix<T>& other)
 }
 
 template <typename T>
-Matrix<T>::Matrix(const Matrix<T>& other) : w(other.w), h(other.h), items(new T[w*h])
+Matrix<T>::Matrix(const Matrix<T>& other) : w(other.w), h(other.h), items(new T[other.w*other.h])
 {
     Iter src(other); 
     Iter dst(*this);
