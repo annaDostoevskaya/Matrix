@@ -3,8 +3,14 @@ Author: github.com/annadostoevskaya
 File: Matrix.h
 Date: 09/05/23 18:33:16
 
-Description: <empty>
+Description: 
+    [11/05/23](segfaultcpp) (https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#S-const) (Matrx::get; Matrix::Iter)
+        Some problems with (N)RVO: 
+            1. Move constructor not implemented (https://www.modernescpp.com/index.php/c-core-guidelines-constructors-assignments-and-desctructors)
+            2. C++14 does not guarantee (N)RVO. Use C++17 or later.
+        Matrix can be implemented without dynamic allocations (https://github.com/g-truc/glm)
 */
+
 
 #pragma once
 #include <iostream>
@@ -16,35 +22,36 @@ class Matrix
 {
 private:
     T *items;
-    int w, h;
+    int w, h; // types from <cstdint>
 
 public:
     class Row;
     class Iter;
 
     Matrix() : items(nullptr), w(0), h(0) {}
-    Matrix(int _w, int _h) : w(_w), h(_h), items(new T[_w*_h]) {}
+    Matrix(int _w, int _h) : w(_w), h(_h), items(new T[_w*_h]) {} // init order
     ~Matrix() { delete[] items; }
     T& get(int i) const { return items[i]; }
-    inline int getSize() const { return w*h; }
-    inline int getWidth() const { return w; }
-    inline int getHeight() const { return h; }
+
+    int getSize() const { return w*h; }
+    int getWidth() const { return w; }
+    int getHeight() const { return h; }
     Row operator[](int hidx)
     {
         assert(hidx*w < h*w && "Error: Out of range");
         return Row(&items[hidx*w], w);
     }
 
-    Matrix(const Matrix<T>& other);
-    Matrix<T>& operator=(const Matrix<T>& other);
-    Matrix<T>& operator+=(const Matrix<T>& other);
-    Matrix<T>& operator-=(const Matrix<T>& other);
+    Matrix(const Matrix& other);
+    Matrix& operator=(const Matrix& other);
+    Matrix& operator+=(const Matrix& other);
+    Matrix& operator-=(const Matrix& other);
 
-    friend Matrix<T> operator+(Matrix<T> lhs, const Matrix<T>& rhs) { return lhs += rhs; }
-    friend Matrix<T> operator-(Matrix<T> lhs, const Matrix<T>& rhs) { return lhs -= rhs; }
-    friend std::ostream& operator<<(std::ostream& os, const Matrix<T>& rhs) 
+    friend Matrix operator+(Matrix lhs, const Matrix& rhs) { lhs += rhs; return lhs; }
+    friend Matrix operator-(Matrix lhs, const Matrix& rhs) { lhs -= rhs; return lhs; }
+    friend std::ostream& operator<<(std::ostream& os, const Matrix& rhs) 
     {
-        Matrix<T>::Iter iter(rhs);
+        Matrix::Iter iter(rhs);
         while (iter.more())
         {
             os << iter.next() << ' ';
@@ -54,9 +61,9 @@ public:
         return os;
     }
 
-    friend Matrix<T> operator*(const Matrix<T>& lhs, const Matrix<T>& rhs)
+    friend Matrix operator*(const Matrix& lhs, const Matrix& rhs)
     {
-        Matrix<T> result(rhs.h, lhs.w);
+        Matrix result(rhs.h, lhs.w);
         if (lhs.w == rhs.h)
         {
             for(int y = 0; y < lhs.h; y++)
@@ -106,7 +113,7 @@ Matrix<T>& Matrix<T>::operator=(const Matrix<T>& other)
     w = other.w;
     h = other.h;
 
-    items = new T[w*other.h];
+    items = new T[w*h];
     Iter src(other); 
     Iter dst(*this);
     while (src.more() && dst.more())
@@ -116,7 +123,7 @@ Matrix<T>& Matrix<T>::operator=(const Matrix<T>& other)
 }
 
 template <typename T>
-Matrix<T>::Matrix(const Matrix<T>& other) : w(other.w), h(other.h), items(new T[other.w*other.h])
+Matrix<T>::Matrix(const Matrix<T>& other) : w(other.w), h(other.h), items(new T[other.w*other.h]) // init-order
 {
     Iter src(other); 
     Iter dst(*this);
@@ -132,7 +139,7 @@ private:
     int size;
 public:
     Row(T *_items, int _size) : items(_items), size(_size) {}
-    ~Row() {}
+    // ~Row() {}
     T& operator[](int widx) 
     {
         assert(widx < size && "Error: Out of range");
@@ -148,23 +155,21 @@ private:
     int i;
 public:
     Iter(const Matrix<T>& _m) : m(_m), i(0) {}
-    ~Iter() {}
-    inline int current() { return i; }
+    // ~Iter() {}
+    int current() { return i; }
     bool more() { return i < m.w * m.h; }
     T& next() { return m.get(i++); }
     T& tnext() 
     {
         // TODO(annad): Refactoring mb?..
-        int x = (i+1) % m.w - 1;
-        if (x == -1) x = m.w - 1;
-        int y = i / m.w;
-        if (y == m.h) y = m.h - 1;
+        int x = i % m.w;
+        int y = i / m.h;
         i++;
         int index = x * m.w + y;
         assert(index < m.getSize() && "Error: Out of range");
         return m.get(index); 
     }
     
-    inline void reset() { i = 0; }
+    void reset() { i = 0; }
 };
 
